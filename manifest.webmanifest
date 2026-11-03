@@ -1,7 +1,7 @@
 {
   "name": "EvoHeat Pool Heating Calculator",
   "short_name": "EvoHeat Calc",
-  "description": "Hourly pool heating calculator (PoolHeat method) on BOM 9 am averages for Perth and Adelaide, with Fusion-i Pro vs Force-Ai running costs.",
+  "description": "Hourly pool heating calculator on BOM 9 am averages for Perth and Adelaide, with Fusion-i Pro vs Force-Ai running costs.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
