@@ -1,4 +1,4 @@
-const CACHE = "evoheat-calc-v34";
+const CACHE = "evoheat-calc-v35";
 // Core files are fetched network-first (bypassing the HTTP cache) so a new release always shows; images and icons are cache-first.
 // On activate, every cache other than the current one is deleted (this clears all earlier versions, whatever their name).
 const CORE = ["./", "index.html", "app.js", "app.css", "manifest.webmanifest"];
