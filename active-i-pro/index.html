@@ -17,7 +17,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="app.css?v=38u">
+<link rel="stylesheet" href="app.css?v=38v">
 <style>
   #gate{font-family:system-ui,sans-serif;max-width:40rem;margin:24px auto;padding:0 16px;color:#212529;line-height:1.45}
   #gate h1{font-size:1.35rem;line-height:1.25}
@@ -30,16 +30,13 @@
 <div id="gate">
   <h1>Marks Personal Pool Heater App - Sapphire Pools</h1>
   <p>This calculator is for use in Australia. It stays closed until this device's location is confirmed inside Australia.</p>
-  <p>The button below asks the browser for this device's location once. The position is used only for that check. It is also sent once to BigDataCloud (api.bigdatacloud.net) to name the nearest suburb, or the locality if no suburb is available, in an access notification. Coordinates are not stored in this app and are not included in the notification.</p>
-  <p>A separate approximate city is looked up from the IP address by ipwho.is. That lookup does not grant access and is not the suburb.</p>
-  <p>If location is denied, times out, is unavailable, or cannot be confirmed in Australia, the calculator stays closed. You can try again. This check runs again each time the app is opened. It is a basic browser check, not a secure country lock. A copy saved on a device before this check was added can keep opening until that copy updates.</p>
   <button id="gate-check" type="button">Check this device's location</button>
   <p id="gate-status" role="status"></p>
 </div>
 <div id="root" hidden></div>
 
 <noscript>This calculator needs JavaScript.</noscript>
-<script src="gate.js?v=38u" defer></script>
-<script src="app.js?v=38u" defer></script>
+<script src="gate.js?v=38v" defer></script>
+<script src="app.js?v=38v" defer></script>
 </body>
 </html>
