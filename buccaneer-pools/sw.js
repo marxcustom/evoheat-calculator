@@ -1,4 +1,4 @@
-const CACHE = "evoheat-buccaneer-v2";
+const CACHE = "evoheat-buccaneer-v3";
 // This variant only deletes caches from its own namespace, so it never removes the root or Sapphire caches.
 const PREFIX = "evoheat-buccaneer-";
 // Core files are fetched network-first (bypassing the HTTP cache) so a new release always shows; images and icons are cache-first.
