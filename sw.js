@@ -1,7 +1,7 @@
-const CACHE = "evoheat-calc-v40";
+const CACHE = "evoheat-calc-v41";
 // Core files are fetched network-first (bypassing the HTTP cache) so a new release always shows; images and icons are cache-first.
 // On activate, every cache other than the current one is deleted (this clears all earlier versions, whatever their name).
-const CORE = ["./", "index.html", "app.js", "app.css", "manifest.webmanifest"];
+const CORE = ["./", "index.html", "app.js", "gate.js", "app.css", "manifest.webmanifest"];
 const STATIC = ["icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon-32.png", "img/fusion-i-pro.jpg", "img/force-ai.png"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => Promise.all(CORE.concat(STATIC).map((u) =>
@@ -21,7 +21,7 @@ const scopePath = new URL(self.registration.scope).pathname;
 const isCore = (req, url) => {
   if (req.mode === "navigate") return true;
   const rel = url.pathname.startsWith(scopePath) ? url.pathname.slice(scopePath.length) : url.pathname;
-  return rel === "" || rel === "index.html" || rel === "app.js" || rel === "app.css" || rel === "manifest.webmanifest" || rel === "sw.js";
+  return rel === "" || rel === "index.html" || rel === "app.js" || rel === "gate.js" || rel === "app.css" || rel === "manifest.webmanifest" || rel === "sw.js";
 };
 self.addEventListener("fetch", (e) => {
   const req = e.request, url = new URL(req.url);
