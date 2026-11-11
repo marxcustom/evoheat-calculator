@@ -1,8 +1,8 @@
-const CACHE = "evoheat-active-i-pro-v38t";
+const CACHE = "evoheat-active-i-pro-v38u";
 // This variant only deletes caches from its own namespace, so it never removes the root app cache.
 const PREFIX = "evoheat-active-i-pro-";
 // Core files are fetched network-first (bypassing the HTTP cache) so a new release always shows; images and icons are cache-first.
-const CORE = ["./", "index.html", "app.js", "app.css", "manifest.webmanifest"];
+const CORE = ["./", "index.html", "app.js", "gate.js", "app.css", "manifest.webmanifest"];
 const STATIC = ["icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon-32.png", "img/force-ai.png", "img/pools/terrace-3-0.png", "img/pools/infinity-3-0.png", "img/pools/infinity-4-0.png", "img/pools/princeton.png", "img/pools/sovereign.png", "img/pools/windsor.png", "img/pools/empire.png", "img/pools/maxi-swim.png", "img/pools/chateau.png", "img/pools/provincial.png", "img/pools/oxford.png", "img/pools/imperial.png", "img/pools/cambridge.png", "img/pools/regency.png", "img/pools/sheffield.webp", "img/pools/conquest.png", "img/pools/somerset.webp", "img/pools/grandeur.png", "img/pools/bermuda.png", "img/pools/duchess.png", "img/pools/dynasty.png", "img/pools/westminster.png", "img/pools/regal.png", "img/pools/flamingo.png", "img/pools/aspen.png", "img/pools/duke.png", "img/pools/royale.png", "img/pools/kensington.png"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => Promise.all(CORE.concat(STATIC).map((u) =>
@@ -19,7 +19,7 @@ const scopePath = new URL(self.registration.scope).pathname;
 const isCore = (req, url) => {
   if (req.mode === "navigate") return true;
   const rel = url.pathname.startsWith(scopePath) ? url.pathname.slice(scopePath.length) : url.pathname;
-  return rel === "" || rel === "index.html" || rel === "app.js" || rel === "app.css" || rel === "manifest.webmanifest" || rel === "sw.js";
+  return rel === "" || rel === "index.html" || rel === "app.js" || rel === "gate.js" || rel === "app.css" || rel === "manifest.webmanifest" || rel === "sw.js";
 };
 self.addEventListener("fetch", (e) => {
   const req = e.request, url = new URL(req.url);
