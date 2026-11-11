@@ -17,26 +17,30 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="app.css?v=38v">
+<link rel="stylesheet" href="app.css?v=38w">
 <style>
   #gate{font-family:system-ui,sans-serif;max-width:40rem;margin:24px auto;padding:0 16px;color:#212529;line-height:1.45}
   #gate h1{font-size:1.35rem;line-height:1.25}
   #gate button{font:inherit;padding:10px 16px;border-radius:999px;border:1px solid #ced4da;background:#fff;cursor:pointer}
   #gate button:disabled{opacity:.55;cursor:wait}
   #gate-status{min-height:1.4em}
+  #gate a{color:#0b5fa5;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
 <div id="gate">
   <h1>Marks Personal Pool Heater App - Sapphire Pools</h1>
-  <p>This calculator is for use in Australia. It stays closed until this device's location is confirmed inside Australia.</p>
+  <p>This calculator is designed for Australia only.</p>
+  <p>It is for the use of authorised partners as a guide for heat pump sizing and running costs. It does not represent a guarantee from any manufacturer listed. If this is required please visit - <a href="https://evoheat.com.au/pool-heating-quote/">https://evoheat.com.au/pool-heating-quote/</a></p>
+  <p>Due to potential cyber risks it stays closed until the location is confirmed inside Australia.</p>
+  <p>Your device's location is used to confirm Australian access and to name your suburb or locality. If the device is in Australia, coordinates are sent once to the location service for that name and are not stored by this app. Access notifications include that place, when it can be named, and an approximate IP location.</p>
   <button id="gate-check" type="button">Check this device's location</button>
   <p id="gate-status" role="status"></p>
 </div>
 <div id="root" hidden></div>
 
 <noscript>This calculator needs JavaScript.</noscript>
-<script src="gate.js?v=38v" defer></script>
-<script src="app.js?v=38v" defer></script>
+<script src="gate.js?v=38w" defer></script>
+<script src="app.js?v=38w" defer></script>
 </body>
 </html>
