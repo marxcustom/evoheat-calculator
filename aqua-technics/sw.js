@@ -1,4 +1,4 @@
-const CACHE = "evoheat-aqua-technics-v6";
+const CACHE = "evoheat-aqua-technics-v7";
 // This variant only deletes caches from its own namespace, so it never removes the root, Sapphire, or Buccaneer caches.
 const PREFIX = "evoheat-aqua-technics-";
 const CORE = ["./", "index.html", "app.js", "gate.js", "app.css", "manifest.webmanifest"];

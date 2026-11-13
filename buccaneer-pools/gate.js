@@ -36,8 +36,51 @@ function fromGeocode(data){
   if(city) return {line:"device locality "+city, conflict:false};
   return {line:"device suburb unavailable", conflict:false};
 }
+const IOS_STEPS=["Open Settings > Privacy & Security > Location Services, make sure it's on, tap Safari Websites and choose While Using the App or Ask Next Time.","In Safari tap the aA (or page menu) button by the address, open Website Settings and set Location to Ask or Allow.","If you opened this link inside Messages or another app, open it in Safari instead, then tap Try again and choose Allow."];
+const ANDROID_STEPS=["Tap the icon left of the address (tune/lock icon) > Permissions or Site settings > Location > Allow.","Make sure phone Location is on (pull down quick settings).","Tap Try again and choose Allow (approximate is fine)."];
 function status(msg){ const el=document.getElementById("gate-status"); if(el) el.textContent=msg; }
 function arm(){ const b=document.getElementById("gate-check"); if(b){ b.disabled=false; b.textContent="Try again"; } }
+function deviceKind(){
+  const ua=navigator.userAgent||"";
+  const touch=navigator.maxTouchPoints||0;
+  if(/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&touch>1)) return "ios";
+  if(/Android/.test(ua)) return "android";
+  return "other";
+}
+function clearHelp(){ const el=document.getElementById("gate-help"); if(el) el.remove(); }
+function helpList(steps){
+  const ol=document.createElement("ol");
+  for(const step of steps){
+    const li=document.createElement("li");
+    li.textContent=step;
+    ol.appendChild(li);
+  }
+  return ol;
+}
+function showDeniedHelp(){
+  clearHelp();
+  const statusEl=document.getElementById("gate-status");
+  if(!statusEl||!statusEl.parentNode) return;
+  const box=document.createElement("div");
+  box.id="gate-help";
+  const kind=deviceKind();
+  if(kind==="other"){
+    const intro=document.createElement("p");
+    intro.textContent="Allow location for this site in your browser's site settings.";
+    box.appendChild(intro);
+    const ip=document.createElement("p");
+    ip.textContent="iPhone";
+    box.appendChild(ip);
+    box.appendChild(helpList(IOS_STEPS));
+    const ap=document.createElement("p");
+    ap.textContent="Android";
+    box.appendChild(ap);
+    box.appendChild(helpList(ANDROID_STEPS));
+  }else{
+    box.appendChild(helpList(kind==="android"?ANDROID_STEPS:IOS_STEPS));
+  }
+  statusEl.insertAdjacentElement("afterend", box);
+}
 async function namePlace(lat,lon){
   const ctrl=new AbortController();
   const timer=setTimeout(()=>ctrl.abort(),4000);
@@ -52,6 +95,7 @@ async function namePlace(lat,lon){
 async function check(){
   const b=document.getElementById("gate-check");
   if(b) b.disabled=true;
+  clearHelp();
   status("Checking this device's location…");
   if(!navigator.geolocation){ status("This browser cannot check device location. The calculator stays closed."); arm(); return; }
   let pos;
@@ -63,6 +107,7 @@ async function check(){
   }catch(err){
     const code=err&&err.code;
     status(code===1?"Location permission was denied. The calculator stays closed. Allow location for this site, then try again.":code===3?"The location check timed out. The calculator stays closed.":code===2?"This device could not provide a location. The calculator stays closed.":"The location could not be confirmed. The calculator stays closed.");
+    if(code===1) showDeniedHelp();
     arm(); return;
   }
   const lat=pos.coords&&pos.coords.latitude, lon=pos.coords&&pos.coords.longitude;
