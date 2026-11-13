@@ -57,7 +57,8 @@ async function check(){
   let pos;
   try{
     pos=await new Promise((resolve,reject)=>{
-      navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:false,timeout:12000,maximumAge:0});
+      // accuracyMode "approximate" is what asks the permission prompt for coarse location where the browser implements it. enableHighAccuracy false is the fallback hint where that option is ignored.
+      navigator.geolocation.getCurrentPosition(resolve,reject,{accuracyMode:"approximate",enableHighAccuracy:false,timeout:12000,maximumAge:0});
     });
   }catch(err){
     const code=err&&err.code;
