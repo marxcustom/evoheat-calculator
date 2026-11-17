@@ -1,7 +1,7 @@
-const CACHE = "evoheat-calc-v45";
+const CACHE = "evoheat-calc-v46";
 // Core files are fetched network-first (bypassing the HTTP cache) so a new release always shows; images and icons are cache-first.
 // On activate, every cache other than the current one is deleted (this clears all earlier versions, whatever their name).
-const CORE = ["./", "index.html", "app.js", "gate.js", "app.css", "manifest.webmanifest"];
+const CORE = ["./", "index.html", "app.js", "gate.js", "app.css", "jspdf.min.js", "report.js", "manifest.webmanifest"];
 const STATIC = ["icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon-32.png", "img/fusion-i-pro.jpg", "img/force-ai.png"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => Promise.all(CORE.concat(STATIC).map((u) =>
