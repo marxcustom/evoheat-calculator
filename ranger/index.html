@@ -17,7 +17,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="app.css?v=1">
+<link rel="stylesheet" href="app.css?v=2">
 <style>
   #gate{font-family:system-ui,sans-serif;max-width:40rem;margin:24px auto;padding:0 16px;color:#212529;line-height:1.45}
   #gate h1{font-size:1.35rem;line-height:1.25}
@@ -29,10 +29,13 @@
   #gate-help ol{margin:.15em 0 0;padding-left:1.25rem}
   #gate-help li{margin:.4em 0}
   #gate a{color:#0b5fa5;overflow-wrap:anywhere}
+  .gate-photo{display:block;width:96px;height:96px;border-radius:50%;object-fit:cover;margin:0 auto 12px;background:#eef2f6}
+  @media (min-width:720px){.gate-photo{width:112px;height:112px}}
 </style>
 </head>
 <body>
 <div id="gate">
+  <img class="gate-photo" src="ranger-photo.jpg" alt="" width="112" height="112">
   <h1>The Ranger Pool Heating App</h1>
   <p>This calculator is designed for Australia only.</p>
   <p>It is for the use of authorised partners as a guide for heat pump sizing and running costs. It does not represent a guarantee from any manufacturer listed. If this is required please visit - <a href="https://evoheat.com.au/pool-heating-quote/">https://evoheat.com.au/pool-heating-quote/</a></p>
@@ -43,7 +46,7 @@
 <div id="root" hidden></div>
 
 <noscript>This calculator needs JavaScript.</noscript>
-<script src="gate.js?v=1" defer></script>
-<script src="app.js?v=1" defer></script>
+<script src="gate.js?v=2" defer></script>
+<script src="app.js?v=2" defer></script>
 </body>
 </html>
