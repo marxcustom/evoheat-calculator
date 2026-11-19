@@ -1,8 +1,8 @@
-const CACHE = "evoheat-bruzzies-v2";
+const CACHE = "evoheat-bruzzies-v3";
 // This variant only deletes caches from its own namespace, so it never removes the root or other app caches.
 const PREFIX = "evoheat-bruzzies-";
 // Core files are fetched network-first (bypassing the HTTP cache) so a new release always shows; images and icons are cache-first.
-const CORE = ["./", "index.html", "app.js", "gate.js", "app.css", "manifest.webmanifest"];
+const CORE = ["./", "index.html", "app.js", "app.css", "manifest.webmanifest"];
 const STATIC = ["icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon-32.png", "bruzzies-photo.jpg", "img/fusion-i-pro.jpg", "img/force-ai.png"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => Promise.all(CORE.concat(STATIC).map((u) =>
@@ -19,7 +19,7 @@ const scopePath = new URL(self.registration.scope).pathname;
 const isCore = (req, url) => {
   if (req.mode === "navigate") return true;
   const rel = url.pathname.startsWith(scopePath) ? url.pathname.slice(scopePath.length) : url.pathname;
-  return rel === "" || rel === "index.html" || rel === "app.js" || rel === "gate.js" || rel === "app.css" || rel === "manifest.webmanifest" || rel === "sw.js";
+  return rel === "" || rel === "index.html" || rel === "app.js" || rel === "app.css" || rel === "manifest.webmanifest" || rel === "sw.js";
 };
 self.addEventListener("fetch", (e) => {
   const req = e.request, url = new URL(req.url);
