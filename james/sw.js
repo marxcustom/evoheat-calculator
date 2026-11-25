@@ -1,4 +1,4 @@
-const CACHE = "evoheat-james-v4";
+const CACHE = "evoheat-james-v5";
 // This variant only deletes caches from its own namespace, so it never removes the root or other app caches.
 const PREFIX = "evoheat-james-";
 // Core files are fetched network-first (bypassing the HTTP cache) so a new release always shows; images and icons are cache-first.
