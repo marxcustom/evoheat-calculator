@@ -3,3 +3,5 @@
 Hourly pool heating calculator for Perth and Adelaide.
 
 https://marxcustom.github.io/evoheat-calculator/
+
+Pages deploy note, 2026-11-25.
