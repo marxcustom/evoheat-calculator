@@ -1,4 +1,4 @@
-const CACHE = "evoheat-ranger-v2";
+const CACHE = "evoheat-ranger-v3";
 // This variant only deletes caches from its own namespace, so it never removes the root or other app caches.
 const PREFIX = "evoheat-ranger-";
 // Core files are fetched network-first (bypassing the HTTP cache) so a new release always shows; images and icons are cache-first.
