@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<!-- Copyright (c) 2026 Mark Hall. All rights reserved. Copying, reproduction, or use to train AI systems is prohibited. -->
+<meta name="robots" content="index, follow, noai, noimageai">
+<meta name="googlebot" content="noai, noimageai">
+<meta name="tdm-reservation" content="1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Chilling App</title>
+<meta name="description" content="Cold plunge chilling capacity calculator. No chiller brand is affiliated and no model is recommended.">
+<meta name="theme-color" content="#0b5fa5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Chilling">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+<main id="root">
+  <header>
+    <h1>The Chilling App</h1>
+    <p class="sub">Cold plunge chilling capacity from the project sheet. This personal calculator is not affiliated with any chiller brand, and it does not recommend a model.</p>
+  </header>
+
+  <section class="card" id="results" aria-label="Chilling capacity required">
+    <h2>Chilling capacity required</h2>
+    <div class="metric" id="required-kw">–</div>
+    <div class="caption" id="required-detail"></div>
+    <div class="seg" data-group="hours" role="group" aria-label="Pull-down time">
+      <button type="button" data-value="1">1 h</button>
+      <button type="button" data-value="2">2 h</button>
+      <button type="button" data-value="4" class="on">4 h</button>
+      <button type="button" data-value="8">8 h</button>
+      <button type="button" data-value="12">12 h</button>
+      <button type="button" data-value="16">16 h</button>
+      <button type="button" data-value="20">20 h</button>
+      <button type="button" data-value="24">24 h</button>
+    </div>
+    <div class="note warning" id="warning">Unit chosen must not deliver less chilling capacity than this figure.</div>
+  </section>
+
+  <section id="project">
+    <h2>Project</h2>
+    <label class="field">Consultant / Trade name
+      <input id="consultant" type="text" autocomplete="organization" value="">
+    </label>
+    <label class="field">Project name
+      <input id="project-name" type="text" value="">
+    </label>
+    <div class="seg" data-group="use" role="group" aria-label="Commercial or residential">
+      <button type="button" data-value="residential" class="on">Residential</button>
+      <button type="button" data-value="commercial">Commercial</button>
+    </div>
+  </section>
+
+  <section id="location">
+    <h2>Location</h2>
+    <label class="field">State
+      <select id="state" aria-label="State"></select>
+    </label>
+    <label class="field">Location (suburb)
+      <select id="city" aria-label="Location"></select>
+    </label>
+  </section>
+
+  <section id="plunge-dimensions-and-details">
+    <h2>Plunge dimensions and details</h2>
+    <div class="slider">
+      <div class="slider-top"><span>Total volume</span><b id="litres-read">1,000 L</b></div>
+      <input id="litres" type="range" min="100" max="20000" step="10" value="1000" aria-label="Total volume in litres">
+    </div>
+    <div class="slider">
+      <div class="slider-top"><span>Plunges on the same filtration</span><b id="vessels-read">1</b></div>
+      <input id="vessels" type="range" min="1" max="12" step="1" value="1" aria-label="Number of plunges on the same filtration">
+    </div>
+    <div class="caption">Vessel shape</div>
+    <div class="seg" data-group="shape" role="group" aria-label="Vessel shape">
+      <button type="button" data-value="rectangle" class="on">Rectangle</button>
+      <button type="button" data-value="circle">Circle</button>
+      <button type="button" data-value="other">Other</button>
+    </div>
+    <div id="rect-helper">
+      <div class="slider">
+        <div class="slider-top"><span>Length</span><b id="length-read">2.0 m</b></div>
+        <input id="length" type="range" min="0.5" max="8" step="0.1" value="2" aria-label="Length">
+      </div>
+      <div class="slider">
+        <div class="slider-top"><span>Width</span><b id="width-read">1.0 m</b></div>
+        <input id="width" type="range" min="0.5" max="8" step="0.1" value="1" aria-label="Width">
+      </div>
+    </div>
+    <div id="circle-helper" hidden>
+      <div class="slider">
+        <div class="slider-top"><span>Diameter</span><b id="diameter-read">1.5 m</b></div>
+        <input id="diameter" type="range" min="0.5" max="8" step="0.1" value="1.5" aria-label="Diameter">
+      </div>
+    </div>
+    <div class="slider">
+      <div class="slider-top"><span>Surface area</span><b id="area-read">2.0 m²</b></div>
+      <input id="area" type="range" min="0.2" max="40" step="0.1" value="2" aria-label="Surface area in square metres">
+    </div>
+    <p class="caption">Length × width, or the circle from the diameter, fills the surface area. Drag the area slider to set it yourself.</p>
+    <label class="field">Vessel material
+      <select id="material" aria-label="Vessel material">
+        <option>Plastic walls</option>
+        <option>Fibreglass</option>
+        <option>Concrete</option>
+        <option>Stainless steel</option>
+        <option>Timber</option>
+        <option>Other</option>
+      </select>
+    </label>
+    <div class="caption">Installed</div>
+    <div class="seg" data-group="install" role="group" aria-label="Inground or aboveground">
+      <button type="button" data-value="aboveground" class="on">Aboveground</button>
+      <button type="button" data-value="inground">Inground</button>
+    </div>
+    <div class="row">
+      <span>Shares a wall with a hot pool</span>
+      <button type="button" class="switch" id="shared" role="switch" aria-checked="false" aria-label="Shares a wall with a hot pool"><span></span></button>
+    </div>
+    <p class="caption">Indoors, vessel gain is litres × plunges ÷ 2. Outdoors, or sharing a wall with a hot pool, that halving is removed.</p>
+  </section>
+
+  <section id="temperature">
+    <h2>Temperature</h2>
+    <div class="slider">
+      <div class="slider-top"><span>Water temperature to maintain</span><b id="target-read">6.0 °C</b></div>
+      <input id="target" type="range" min="0" max="30" step="0.5" value="6" aria-label="Water temperature to maintain">
+    </div>
+    <div class="caption">Indoor or outdoor</div>
+    <div class="seg" data-group="place" role="group" aria-label="Indoor or outdoor">
+      <button type="button" data-value="indoor" class="on">Indoor</button>
+      <button type="button" data-value="outdoor">Outdoor</button>
+    </div>
+    <div id="room-block">
+      <div class="slider">
+        <div class="slider-top"><span>Highest summer room air temperature</span><b id="room-read">30.0 °C</b></div>
+        <input id="room" type="range" min="10" max="45" step="0.5" value="30" aria-label="Highest summer room air temperature">
+      </div>
+      <p class="caption">Starting water temperature is this room air temperature.</p>
+    </div>
+    <div id="air-block" hidden>
+      <div class="slider">
+        <div class="slider-top"><span>Max summer air temperature</span><b id="air-read">32.1 °C</b></div>
+        <input id="air" type="range" min="10" max="50" step="0.1" value="32.1" aria-label="Max summer air temperature">
+      </div>
+      <p class="caption" id="air-hint"></p>
+      <div class="row" id="sun-row">
+        <span>Exposed to direct sunlight</span>
+        <button type="button" class="switch" id="sun" role="switch" aria-checked="false" aria-label="Exposed to direct sunlight"><span></span></button>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="metric-box"><span>Starting temperature</span><b id="start-read">–</b></div>
+      <div class="metric-box"><span>ΔT</span><b id="delta-read">–</b></div>
+    </div>
+  </section>
+
+  <section id="use">
+    <h2>Use</h2>
+    <div class="slider">
+      <div class="slider-top"><span>Maximum people per shift</span><b id="people-read">2</b></div>
+      <input id="people" type="range" min="0" max="20" step="1" value="2" aria-label="Maximum people per shift">
+    </div>
+    <div class="caption">Shifts per hour</div>
+    <div class="seg" data-group="shifts" role="group" aria-label="Shifts per hour">
+      <button type="button" data-value="12">Every 5 min · 12</button>
+      <button type="button" data-value="6">Every 10 min · 6</button>
+      <button type="button" data-value="4">Every 15 min · 4</button>
+      <button type="button" data-value="3" class="on">Every 20 min · 3</button>
+      <button type="button" data-value="2">Every 30 min · 2</button>
+    </div>
+    <p class="caption" id="people-hour">6 people per hour</p>
+    <div class="row">
+      <span>UV sanitation connected</span>
+      <button type="button" class="switch" id="uv" role="switch" aria-checked="true" aria-label="UV sanitation connected"><span></span></button>
+    </div>
+    <div class="slider">
+      <div class="slider-top"><span>Water pumps</span><b id="pumps-read">1</b></div>
+      <input id="pumps" type="range" min="0" max="8" step="1" value="1" aria-label="Number of water pumps">
+    </div>
+    <div class="slider">
+      <div class="slider-top"><span>Heat gain per pump</span><b id="pump-watts-read">300 W</b></div>
+      <input id="pump-watts" type="range" min="0" max="3000" step="10" value="300" aria-label="Heat gain per pump">
+    </div>
+    <label class="field">Model of water pump
+      <input id="pump-model" type="text" value="" placeholder="Optional">
+    </label>
+  </section>
+
+  <section id="heat-gains">
+    <h2>Heat gains</h2>
+    <div class="gains" id="gains"></div>
+  </section>
+
+  <section id="pull-down">
+    <h2>Pull-down</h2>
+    <p class="caption">Excluding heat gains, then including them. Pull-down kW is 4.18 × ΔT × litres ÷ (3,600 × hours × factor).</p>
+    <h3 class="caption">Excluding heat gains</h3>
+    <table id="table-excluding">
+      <thead><tr><th>Hours</th><th class="num">kW</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <h3 class="caption">Including heat gains</h3>
+    <table id="table-including">
+      <thead><tr><th>Hours</th><th class="num">kW</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="advanced">
+    <h2>Advanced</h2>
+    <div class="slider">
+      <div class="slider-top"><span>Pull-down factor</span><b id="factor-read">0.90</b></div>
+      <input id="factor" type="range" min="0.5" max="1" step="0.01" value="0.9" aria-label="Pull-down factor">
+    </div>
+    <p class="caption">The 0.9 under the pull-down formula. It stays adjustable.</p>
+  </section>
+
+  <section id="chiller-models">
+    <h2>Chiller models</h2>
+    <div class="placeholder" id="models-placeholder">
+      <strong>Models will be added here later.</strong>
+      No chiller model is recommended yet. There is no price. Choose a unit whose chilling capacity is at least the figure above.
+    </div>
+  </section>
+
+  <section id="fyi-for-best-results-ensure">
+    <h2>FYI for best results ensure:</h2>
+    <ul class="tips" id="fyi">
+      <li>The vessel is appropriately well insulated.</li>
+      <li>All pipework and filter are appropriately lagged/ insulated.</li>
+      <li>The heat pump is not drawing in hot air from any equipment within its vicinity.</li>
+      <li>Use blanket/covers when not in use to retain chill.</li>
+      <li>Particularly for inground plunge pools, ensure thermal barriers are used between cold and hot bodies of water in close proximity.</li>
+      <li>Face any heat pump used for heating water, towards the chiller to draw in its cold waste air discharge.</li>
+    </ul>
+  </section>
+
+  <nav class="contents" id="contents" aria-label="Contents"></nav>
+  <footer>© 2026 Mark Hall. All rights reserved. This app may not be copied or used to train AI systems. This personal calculator is not affiliated with any chiller brand.</footer>
+</main>
+<button type="button" class="chip" id="chip">Reset</button>
+<noscript>This calculator needs JavaScript.</noscript>
+<script src="locations.js?v=1"></script>
+<script src="calc.js?v=1"></script>
+<script src="app.js?v=1" defer></script>
+</body>
+</html>
