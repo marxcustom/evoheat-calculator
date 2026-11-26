@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<!-- Copyright (c) 2026 Mark Hall. All rights reserved. Copying, reproduction, or use to train AI systems is prohibited. -->
+<meta name="robots" content="index, follow, noai, noimageai">
+<meta name="googlebot" content="noai, noimageai">
+<meta name="tdm-reservation" content="1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spa Heat-Up</title>
+<meta name="description" content="Spa heat-up time calculator. No heat-pump brand is affiliated.">
+<meta name="theme-color" content="#0b5fa5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Spa Heat-Up">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+<main>
+  <header>
+    <h1>Spa Heat-Up</h1>
+    <p class="sub">Heat-up time from the model’s output at the ambient air temperature. This personal calculator is not affiliated with any heat-pump brand.</p>
+  </header>
+
+  <section class="card" id="results" aria-label="Heat-up time">
+    <h2>Heat-up time</h2>
+    <div class="metric" id="heatup-hm">–</div>
+    <div class="caption" id="heatup-detail"></div>
+    <div class="note warning" id="loss-note">These heat-up figures do not take into account any heat loss factors.</div>
+    <p class="caption" id="loss-caveat">Items such as uninsulated tank walls and pipework, uncovered pools and other factors will increase these values.</p>
+  </section>
+
+  <section id="spa">
+    <h2>Spa</h2>
+    <div class="slider">
+      <div class="slider-top"><span>Volume</span><b id="litres-read">1,500 L</b></div>
+      <input id="litres" type="range" min="200" max="20000" step="10" value="1500" aria-label="Spa volume in litres">
+    </div>
+    <p class="caption">Length × width × water depth fills the volume. 1 m³ is 1,000 L.</p>
+    <div class="slider">
+      <div class="slider-top"><span>Length</span><b id="length-read">2.0 m</b></div>
+      <input id="length" type="range" min="0.8" max="6" step="0.1" value="2" aria-label="Length">
+    </div>
+    <div class="slider">
+      <div class="slider-top"><span>Width</span><b id="width-read">2.0 m</b></div>
+      <input id="width" type="range" min="0.8" max="6" step="0.1" value="2" aria-label="Width">
+    </div>
+    <div class="slider">
+      <div class="slider-top"><span>Water depth</span><b id="depth-read">0.8 m</b></div>
+      <input id="depth" type="range" min="0.4" max="1.6" step="0.05" value="0.8" aria-label="Water depth">
+    </div>
+  </section>
+
+  <section id="location">
+    <h2>Location</h2>
+    <p class="caption">City labels only. Choosing a city presets the cold-month mains temperature and the cold-month morning air temperature.</p>
+    <label class="field">State
+      <select id="state" aria-label="State"></select>
+    </label>
+    <label class="field">Location
+      <select id="city" aria-label="Location"></select>
+    </label>
+  </section>
+
+  <section id="temperature">
+    <h2>Temperature</h2>
+    <div class="slider">
+      <div class="slider-top"><span>Start water temperature</span><b id="start-read">15.0 °C</b></div>
+      <input id="start" type="range" min="5" max="35" step="0.5" value="15" aria-label="Start water temperature">
+    </div>
+    <p class="caption" id="start-hint">Defaults to the city’s cold-month mains temperature, or 15 °C.</p>
+    <div class="slider">
+      <div class="slider-top"><span>Target temperature</span><b id="target-read">38.0 °C</b></div>
+      <input id="target" type="range" min="20" max="40" step="0.5" value="38" aria-label="Target temperature">
+    </div>
+    <div class="slider">
+      <div class="slider-top"><span>Ambient air temperature</span><b id="ambient-read">15.0 °C</b></div>
+      <input id="ambient" type="range" min="2" max="30" step="0.5" value="15" aria-label="Ambient air temperature">
+    </div>
+    <p class="caption" id="ambient-hint"></p>
+    <div class="row">
+      <span>Spa cover on</span>
+      <button type="button" class="switch" id="cover" role="switch" aria-checked="true" aria-label="Spa cover on"><span></span></button>
+    </div>
+    <p class="caption" id="cover-note">The cover is recorded only. It does not change the heat-up time.</p>
+  </section>
+
+  <section id="heat-pump">
+    <h2>Heat pump</h2>
+    <label class="field">Range
+      <select id="range" aria-label="Heat pump range"></select>
+    </label>
+    <p class="caption" id="range-note"></p>
+    <label class="field">Model
+      <select id="model" aria-label="Heat pump model"></select>
+    </label>
+    <div class="slider">
+      <div class="slider-top"><span>Units</span><b id="units-read">1</b></div>
+      <input id="units" type="range" min="1" max="4" step="1" value="1" aria-label="Number of units">
+    </div>
+  </section>
+
+  <section id="time-at-each-ambient">
+    <h2>Time at each ambient</h2>
+    <p class="caption">The same spa and model, from 2 °C to 30 °C ambient. Output between these points is a straight line.</p>
+    <table id="table-ambient">
+      <thead><tr><th>Ambient</th><th class="num">Output</th><th class="num">Time</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="every-model-in-this-range">
+    <h2>Every model in this range</h2>
+    <div id="compare"></div>
+    <div class="slider">
+      <div class="slider-top"><span>Target heat-up time</span><b id="goal-read">4.0 h</b></div>
+      <input id="goal" type="range" min="0.5" max="24" step="0.5" value="4" aria-label="Target heat-up time">
+    </div>
+    <div class="placeholder" id="fastest"></div>
+  </section>
+
+  <nav class="contents" id="contents" aria-label="Contents"></nav>
+  <footer>© 2026 Mark Hall. All rights reserved. This app may not be copied or used to train AI systems. This personal calculator is not affiliated with any heat-pump brand.</footer>
+</main>
+<button type="button" class="chip" id="chip">Reset</button>
+<noscript>This calculator needs JavaScript.</noscript>
+<script src="locations.js?v=1"></script>
+<script src="models.js?v=1"></script>
+<script src="calc.js?v=1"></script>
+<script src="app.js?v=1" defer></script>
+</body>
+</html>
