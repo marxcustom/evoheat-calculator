@@ -8,15 +8,21 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   var AMBIENTS = [2, 5, 10, 15, 20, 25, 30];
 
+  function points(model) {
+    return Object.keys(model.kw).map(function (k) { return { t: +k, kw: model.kw[k] }; }).sort(function (a, b) { return a.t - b.t; });
+  }
+
+  function line(a, b, ambient) {
+    return a.kw + (b.kw - a.kw) * ((ambient - a.t) / (b.t - a.t));
+  }
+
   function kwAt(model, ambient) {
-    var pts = AMBIENTS.map(function (t) { return { t: t, kw: model.kw[String(t)] }; });
-    if (ambient <= pts[0].t) return pts[0].kw;
-    if (ambient >= pts[pts.length - 1].t) return pts[pts.length - 1].kw;
+    var pts = points(model);
+    if (pts.length === 1) return pts[0].kw;
+    if (ambient <= pts[0].t) return line(pts[0], pts[1], ambient);
+    if (ambient >= pts[pts.length - 1].t) return line(pts[pts.length - 2], pts[pts.length - 1], ambient);
     for (var i = 1; i < pts.length; i++) {
-      if (ambient <= pts[i].t) {
-        var a = pts[i - 1], b = pts[i];
-        return a.kw + (b.kw - a.kw) * ((ambient - a.t) / (b.t - a.t));
-      }
+      if (ambient <= pts[i].t) return line(pts[i - 1], pts[i], ambient);
     }
     return pts[pts.length - 1].kw;
   }

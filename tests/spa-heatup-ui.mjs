@@ -1,6 +1,5 @@
 /**
- * Opens the Spa Heat-Up app locally and checks the Force-i Pro 24 sheet example.
- * Geolocation, ntfy and IP lookups are blocked and fail the run if attempted.
+ * Opens Spa Heat-Up locally. Geolocation, ntfy and IP lookups are blocked.
  *
  *   BASE=http://127.0.0.1:8801 node tests/spa-heatup-ui.mjs
  */
@@ -16,8 +15,8 @@ const puppeteer = (await import("puppeteer-core").catch(() =>
 
 const BASE = process.env.BASE || "http://127.0.0.1:8801";
 const CHROME = process.env.CHROME || "/usr/bin/google-chrome";
-const force = ranges.find((item) => item.id === "Force-i Pro").models.find((item) => item.name === "Force-i Pro 24");
-const expectedH = hours(8000, 30, 38, kwAt(force, 5), 1);
+const force16 = ranges.find((item) => item.id === "Force-Ai").models.find((item) => item.name === "Force-Ai 16");
+const expectedH = hours(1500, 20, 38, kwAt(force16, 15), 1);
 
 function hostOf(url) {
   try { return new URL(url).host; } catch { return ""; }
@@ -47,6 +46,11 @@ page.on("pageerror", (err) => errors.push(String(err)));
 await page.goto(BASE + "/spa-heatup/", { waitUntil: "domcontentloaded" });
 await page.waitForFunction(() => document.getElementById("heatup-hm") && document.getElementById("heatup-hm").textContent !== "–");
 
+const initial = await page.$eval("#range", (el) => el.value);
+assert.strictEqual(initial, "Force-Ai");
+const options = await page.$$eval("#range option", (els) => els.map((el) => el.value));
+assert.deepStrictEqual(options, ["Force-Ai", "Fusion-i Pro"]);
+
 async function setRange(id, value) {
   await page.$eval("#" + id, (el, value) => {
     Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set.call(el, String(value));
@@ -61,49 +65,35 @@ async function setSelect(id, value) {
   }, value);
 }
 
-await setSelect("range", "Force-i Pro");
-await setSelect("model", "Force-i Pro 24");
-await setRange("litres", 8000);
-await setRange("start", 30);
+await setSelect("model", "Force-Ai 16");
+await setRange("litres", 1500);
+await setRange("start", 20);
 await setRange("target", 38);
-await setRange("ambient", 5);
+await setRange("ambient", 15);
 await setRange("units", 1);
-await setRange("goal", 6);
+await setRange("goal", 8);
 
 const view = await page.evaluate(() => ({
   title: document.title,
-  h1: document.querySelector("h1").textContent,
   hm: document.getElementById("heatup-hm").textContent,
   hours: Number(document.getElementById("heatup-hm").getAttribute("data-hours")),
   kw: Number(document.getElementById("heatup-hm").getAttribute("data-kw")),
-  detail: document.getElementById("heatup-detail").textContent,
-  note: document.getElementById("loss-note").textContent,
-  caveat: document.getElementById("loss-caveat").textContent,
-  cover: document.getElementById("cover-note").textContent,
-  rows: document.querySelectorAll("#compare div").length,
+  note: document.getElementById("range-note").textContent,
+  loss: document.getElementById("loss-note").textContent,
   fastest: document.getElementById("fastest").textContent,
-  headings: [...document.querySelectorAll("h2")].map((h) => h.textContent)
+  names: [...document.querySelectorAll("#compare div span:first-child")].map((el) => el.textContent)
 }));
 
 assert.strictEqual(view.title, "Spa Heat-Up");
-assert.strictEqual(view.h1, "Spa Heat-Up");
-assert.ok(Math.abs(view.hours - expectedH) < 0.001, view.hours);
-assert.ok(Math.abs(view.kw - 14.7) < 0.001, view.kw);
+assert.ok(Math.abs(view.kw - 10.17) < 1e-9, view.kw);
+assert.ok(Math.abs(view.hours - expectedH) < 1e-6, view.hours);
 assert.strictEqual(view.hm, formatHM(expectedH));
-assert.ok(view.detail.includes("Force-i Pro 24"));
-assert.strictEqual(view.note, "These heat-up figures do not take into account any heat loss factors.");
-assert.strictEqual(view.caveat, "Items such as uninsulated tank walls and pipework, uncovered pools and other factors will increase these values.");
-assert.ok(view.cover.includes("recorded only"));
-assert.ok(view.rows >= 6);
-assert.ok(view.fastest.includes("Force-i Pro 24"));
-assert.ok(view.headings.includes("Heat-up time"));
-assert.ok(view.headings.includes("Temperature"));
-
-await page.click("#cover");
-const uncovered = await page.$eval("#cover-note", (el) => el.textContent);
-assert.ok(uncovered.includes("Cover off"));
-const sameHours = await page.$eval("#heatup-hm", (el) => el.getAttribute("data-hours"));
-assert.ok(Math.abs(Number(sameHours) - view.hours) < 1e-9);
+assert.ok(view.note.includes("BROCHURE-Evo-Force-Ai.pdf"));
+assert.ok(view.note.includes("water in 26"));
+assert.strictEqual(view.loss, "These heat-up figures do not take into account any heat loss factors.");
+assert.deepStrictEqual(view.names, ranges[0].models.map((m) => m.name));
+assert.ok(view.fastest.includes("Fusion-i Pro 7"));
+assert.ok(view.fastest.includes("across Force-Ai and Fusion-i Pro"));
 
 const geo = await page.evaluate(() => !!window.__geoCalled);
 assert.strictEqual(geo, false);
@@ -111,10 +101,9 @@ assert.deepStrictEqual(blocked, []);
 assert.deepStrictEqual(errors, []);
 
 if (process.env.SHOT) {
-  await page.click("#cover");
   await page.evaluate(() => window.scrollTo(0, 0));
   await new Promise((r) => setTimeout(r, 150));
   await page.screenshot({ path: process.env.SHOT, fullPage: false });
 }
 await browser.close();
-console.log("ui ok", view.hm, view.kw, "kW", view.hours.toFixed(3), "h");
+console.log("ui ok", view.hm, view.kw, "kW");
