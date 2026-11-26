@@ -1,4 +1,4 @@
-const CACHE = "evoheat-spa-heatup-v1";
+const CACHE = "evoheat-spa-heatup-v2";
 // This app only deletes caches from its own namespace, so it never removes another app's cache.
 const PREFIX = "evoheat-spa-heatup-";
 const CORE = ["./", "index.html", "app.js", "calc.js", "models.js", "locations.js", "app.css", "manifest.webmanifest"];

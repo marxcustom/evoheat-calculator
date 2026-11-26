@@ -44,7 +44,7 @@
     $("range").innerHTML = RANGES.map(function (r) {
       return '<option value="' + r.id + '">' + r.name + "</option>";
     }).join("");
-    var prefer = RANGES.filter(function (r) { return r.id === "Force-i Pro"; })[0];
+    var prefer = RANGES.filter(function (r) { return r.id === "Force-Ai"; })[0];
     if (prefer) $("range").value = prefer.id;
     fillModels();
   }
@@ -55,7 +55,6 @@
       return '<option value="' + m.name + '">' + m.name + "</option>";
     }).join("");
     if (list.some(function (m) { return m.name === current; })) $("model").value = current;
-    else if (list.some(function (m) { return m.name === "Force-i Pro 24"; })) $("model").value = "Force-i Pro 24";
   }
   function applyCity() {
     var c = city();
@@ -116,13 +115,17 @@
       var on = row.name === m.name ? " class=\"total\"" : "";
       return "<div" + on + "><span>" + row.name + "</span><span>" + Heat.formatHM(row.hours) + " · " + fmt(row.kw, 2) + " kW</span></div>";
     }).join("");
+    var both = [];
+    RANGES.forEach(function (rr) {
+      Heat.rowsFor(rr, litres, start, target, ambient, units).forEach(function (row) { both.push(row); });
+    });
     var goal = num("goal");
-    var fit = Heat.smallestThatMeets(rows, goal);
+    var fit = Heat.smallestThatMeets(both, goal);
     if (fit) {
-      $("fastest").innerHTML = "<strong>Smallest model to reach " + fmt(goal, 1) + " h</strong>" + fit.name + " · " + Heat.formatHM(fit.hours) + " · " + fmt(fit.kw, 2) + " kW. This is the lowest output in the range that meets the target time.";
+      $("fastest").innerHTML = "<strong>Smallest model across Force-Ai and Fusion-i Pro to reach " + fmt(goal, 1) + " h</strong>" + fit.name + " · " + Heat.formatHM(fit.hours) + " · " + fmt(fit.kw, 2) + " kW. This is the lowest output in either range that meets the target time.";
     } else {
-      var fastest = rows.slice().sort(function (a, b) { return a.hours - b.hours; })[0];
-      $("fastest").innerHTML = "<strong>No model in this range reaches " + fmt(goal, 1) + " h</strong>" + (fastest ? "The fastest is " + fastest.name + " at " + Heat.formatHM(fastest.hours) + " · " + fmt(fastest.kw, 2) + " kW." : "");
+      var fastest = both.slice().sort(function (a, b) { return a.hours - b.hours; })[0];
+      $("fastest").innerHTML = "<strong>No model in either range reaches " + fmt(goal, 1) + " h</strong>" + (fastest ? "The fastest is " + fastest.name + " at " + Heat.formatHM(fastest.hours) + " · " + fmt(fastest.kw, 2) + " kW." : "");
     }
   }
 
